@@ -12,7 +12,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ja">
       <body className="bg-zinc-50">
         <Header />
-        {children}
+        <main>{children}</main>
       </body>
     </html>
   );
