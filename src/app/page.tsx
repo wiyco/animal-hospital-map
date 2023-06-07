@@ -8,9 +8,9 @@ export default function Home() {
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "";
     const map = new mapboxgl.Map({
       container: "map", // container `id`
-      style: "mapbox://styles/mapbox/streets-v12", // style URL
-      center: [-74.5, 40], // starting position [lng, lat]
-      zoom: 9, // starting zoom
+      style: "mapbox://styles/w1yco/clilw3bwh004o01pw9bfa5hbh", // style URL
+      center: [139.696892, 35.690318], // starting position [lng, lat]
+      zoom: 14, // starting zoom
     });
   }, []);
 
