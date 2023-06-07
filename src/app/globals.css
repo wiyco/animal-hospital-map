@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 100%;
+
+  @apply min-h-screen bg-zinc-50;
+}
+
+/* Hide garbage */
+.mapboxgl-control-container {
+  display: none;
+}
