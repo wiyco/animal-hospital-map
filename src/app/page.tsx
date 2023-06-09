@@ -1,22 +1,194 @@
 "use client";
 
 import mapboxgl from "mapbox-gl";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
+
+import { BtmSheet, ChildHandles } from "@/components/sheet/BottomSheet";
+
+type hospitalParams = {
+  name: string;
+  address: string;
+  phone: string;
+  animal_type: string;
+  hospital_url: string;
+};
 
 export default function Home() {
+  // 病院データ
+  const [params, setParams] = useState<hospitalParams>();
+  // カーソルが病院アイコンに触れているか
+  const [onCursor, setOnCursor] = useState<boolean>(false);
+  // feature id
+  let featureId = 0;
+
+  // ボトムシートの子コンポーネントの参照
+  const btmSheetRef = useRef<ChildHandles>(null);
+
+  // ボトムシートを開く
+  const openSheet = () => {
+    btmSheetRef.current?.fullOpen();
+  };
+
+  // ボトムシートを閉じる
+  const closeSheet = () => {
+    btmSheetRef.current?.fullClose();
+  };
+
+  // 病院データの取得
+  const setData = (map: mapboxgl.Map, e: mapboxgl.EventData) => {
+    const feature = e.features![0];
+    if (!feature) return;
+    // Set the hover param to `true`
+    map.setFeatureState(
+      {
+        source: "animal-hospitals",
+        sourceLayer: "animal_hospital_kanto_v1-500lo8",
+        id: feature.id,
+      },
+      {
+        hover: true,
+      }
+    );
+    featureId = feature.id;
+    const props = feature.properties;
+    /**
+     * @todo mapbox要相談
+     * @param {props.name}
+     * csv(utf-8, comma)をTilesへアップロードすると、
+     * 先頭のcolumn-headerに謎のUnicode文字が追加される。(u{feff})
+     * おそらくutf-8のbomに関連するバグだと思われる。
+     */
+    setParams({
+      name: props!["\u{feff}name"] as string,
+      address: props?.address as string,
+      phone: props?.phone as string,
+      animal_type: props?.animal_type as string,
+      hospital_url: props?.hospital_url as string,
+    });
+    openSheet();
+  };
+
+  // mapbox main処理
   useEffect(() => {
+    // init mapbox
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "";
     const map = new mapboxgl.Map({
-      container: "map", // container `id`
-      style: "mapbox://styles/w1yco/clilw3bwh004o01pw9bfa5hbh", // style URL
-      center: [139.696892, 35.690318], // starting position [lng, lat]
-      zoom: 14, // starting zoom
+      container: "map",
+      style: "mapbox://styles/mapbox/streets-v12",
+      center: [139.696892, 35.690318],
+      zoom: 14,
+    });
+
+    // ready mapbox
+    map.on("load", () => {
+      map.addSource("animal-hospitals", {
+        type: "vector",
+        url: "mapbox://w1yco.3a69ve5a",
+      });
+      map.addLayer({
+        id: "animal-hospitals",
+        source: "animal-hospitals",
+        "source-layer": "animal_hospital_kanto_v1-500lo8",
+        type: "circle",
+        paint: {
+          "circle-color": "#4264fb",
+          "circle-stroke-width": 3,
+          "circle-stroke-color": "#ffffff",
+          // change circle-size at hover-state
+          "circle-radius": ["case", ["boolean", ["feature-state", "hover"], false], 12, 8],
+        },
+      });
+      map.addLayer({
+        id: "animal-hospitals-label",
+        source: "animal-hospitals",
+        "source-layer": "animal_hospital_kanto_v1-500lo8",
+        type: "symbol",
+        layout: {
+          /**
+           * @todo @param {props.name}
+           */
+          "text-field": ["get", "\u{feff}name"],
+          "text-font": ["Open Sans Regular"],
+          "text-offset": [0, 1],
+          "text-anchor": "top",
+          "text-size": 14,
+        },
+        paint: {
+          "text-color": "#e64c4c",
+          "text-halo-color": "#ffffff",
+          "text-halo-width": 1,
+        },
+      });
+
+      map.on("click", (e) => {
+        const features = map.queryRenderedFeatures(e.point);
+        const has = features.find((feature) => feature.source === "animal-hospitals");
+        if (has) return;
+        // Close bottom sheet
+        closeSheet();
+      });
+      map.on("click", "animal-hospitals", (e) => {
+        // カーソル変更
+        setOnCursor(true);
+        setData(map, e);
+      });
+      map.on("mousemove", "animal-hospitals", (e) => {
+        // カーソル変更
+        setOnCursor(true);
+        setData(map, e);
+      });
+      map.on("mouseleave", "animal-hospitals", () => {
+        // カーソル変更
+        setOnCursor(false);
+        // Set the hover param to `false`
+        map.setFeatureState(
+          {
+            source: "animal-hospitals",
+            sourceLayer: "animal_hospital_kanto_v1-500lo8",
+            id: featureId,
+          },
+          {
+            hover: false,
+          }
+        );
+      });
     });
   }, []);
 
   return (
-    <main>
-      <div id="map" className="w-full h-full overflow-clip"></div>
+    <main className="relative">
+      <div
+        id="map"
+        className={`w-full h-full overflow-clip ${
+          onCursor ? "cursor-pointer" : "cursor-grab active:cursor-grabbing"
+        }`}
+      ></div>
+
+      <BtmSheet
+        // ボトムシートの参照
+        ref={btmSheetRef}
+        header={
+          <div className="flex items-center justify-start">
+            <h1 className="text-xl">{params?.name}</h1>
+          </div>
+        }
+      >
+        <ul className="p-4 flex flex-col items-start justify-center space-y-2">
+          <li>{params?.address}</li>
+          <li>{params?.phone}</li>
+          <li>{params?.animal_type}</li>
+          <li>
+            <a
+              className="text-blue-600 hover:underline"
+              href={params?.hospital_url ?? ""}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {params?.hospital_url}
+            </a>
+          </li>
+        </ul>
+      </BtmSheet>
     </main>
   );
 }

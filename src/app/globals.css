@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --rsbs-max-w: 48rem;
+}
+
 body {
   display: grid;
   grid-template-rows: auto 1fr auto;
@@ -10,7 +14,17 @@ body {
   @apply min-h-screen bg-zinc-50;
 }
 
-/* Hide garbage */
+/* The below class elements will add when mapboxgl called */
 .mapboxgl-control-container {
-  display: none;
+  @apply absolute bottom-0 right-0;
+}
+
+.mapboxgl-control-container a {
+  @apply text-xs text-zinc-600 hover:text-zinc-800 hover:underline;
+}
+
+.mapboxgl-ctrl-attrib-inner {
+  background-color: rgb(255 255 255 / 60%);
+
+  @apply p-[1px] flex items-center justify-center space-x-2;
 }
