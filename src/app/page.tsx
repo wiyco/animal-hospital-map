@@ -123,8 +123,8 @@ export default function Home() {
 
       map.on("click", (e) => {
         const features = map.queryRenderedFeatures(e.point);
-        const has = features.find((feature) => feature.source === "animal-hospitals");
-        if (has) return;
+        const hasTarget = features.find((feature) => feature.source === "animal-hospitals");
+        if (hasTarget) return;
         // Close bottom sheet
         closeSheet();
       });
