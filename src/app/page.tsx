@@ -49,6 +49,19 @@ export default function Home() {
         hover: true,
       }
     );
+    // Set a hover param to `false` that clicked before
+    if (featureId !== feature.id) {
+      map.setFeatureState(
+        {
+          source: "animal-hospitals",
+          sourceLayer: "animal_hospital_kanto_v1-500lo8",
+          id: featureId,
+        },
+        {
+          hover: false,
+        }
+      );
+    }
     featureId = feature.id;
     const props = feature.properties;
     /**
@@ -123,7 +136,7 @@ export default function Home() {
 
       map.on("click", (e) => {
         const features = map.queryRenderedFeatures(e.point);
-        const hasTarget = features.find((feature) => feature.source === "animal-hospitals");
+        const hasTarget = features.some((feature) => feature.source === "animal-hospitals");
         if (hasTarget) return;
         // Close bottom sheet
         closeSheet();
