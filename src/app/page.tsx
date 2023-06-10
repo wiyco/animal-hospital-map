@@ -14,11 +14,11 @@ type hospitalParams = {
 };
 
 export default function Home() {
-  // hospital params
+  // State of hospital params
   const [params, setParams] = useState<hospitalParams>();
   // Is cursor on the layer that `animal-hospitals`
   const [onCursor, setOnCursor] = useState<boolean>(false);
-  // feature id
+  // The target feature id
   let featureId = 0;
 
   // Reference of bottom sheet
