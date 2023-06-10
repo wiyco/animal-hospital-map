@@ -14,31 +14,31 @@ type hospitalParams = {
 };
 
 export default function Home() {
-  // 病院データ
+  // hospital params
   const [params, setParams] = useState<hospitalParams>();
-  // カーソルが病院アイコンに触れているか
+  // Is cursor on the layer that `animal-hospitals`
   const [onCursor, setOnCursor] = useState<boolean>(false);
   // feature id
   let featureId = 0;
 
-  // ボトムシートの子コンポーネントの参照
+  // Reference of bottom sheet
   const btmSheetRef = useRef<ChildHandles>(null);
 
-  // ボトムシートを開く
+  // Open bottom sheet
   const openSheet = () => {
     btmSheetRef.current?.fullOpen();
   };
 
-  // ボトムシートを閉じる
+  // Close bottom sheet
   const closeSheet = () => {
     btmSheetRef.current?.fullClose();
   };
 
-  // 病院データの取得
+  // Set hospital params to bottom sheet
   const setData = (map: mapboxgl.Map, e: mapboxgl.EventData) => {
-    const feature = e.features![0];
+    const feature = e.features?.[0];
     if (!feature) return;
-    // Set the hover param to `true`
+    // Set a hover param to `true`
     map.setFeatureState(
       {
         source: "animal-hospitals",
@@ -59,18 +59,19 @@ export default function Home() {
      * おそらくutf-8のbomに関連するバグだと思われる。
      */
     setParams({
-      name: props!["\u{feff}name"] as string,
+      name: props?.["\u{feff}name"] as string,
       address: props?.address as string,
       phone: props?.phone as string,
       animal_type: props?.animal_type as string,
       hospital_url: props?.hospital_url as string,
     });
+    // Open bottom sheet
     openSheet();
   };
 
-  // mapbox main処理
+  // Mapbox
   useEffect(() => {
-    // init mapbox
+    // Init Mapbox
     mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "";
     const map = new mapboxgl.Map({
       container: "map",
@@ -79,7 +80,7 @@ export default function Home() {
       zoom: 14,
     });
 
-    // ready mapbox
+    // Ready Mapbox
     map.on("load", () => {
       map.addSource("animal-hospitals", {
         type: "vector",
@@ -94,7 +95,7 @@ export default function Home() {
           "circle-color": "#4264fb",
           "circle-stroke-width": 3,
           "circle-stroke-color": "#ffffff",
-          // change circle-size at hover-state
+          // change circle-size at `hover`
           "circle-radius": ["case", ["boolean", ["feature-state", "hover"], false], 12, 8],
         },
       });
@@ -128,19 +129,16 @@ export default function Home() {
         closeSheet();
       });
       map.on("click", "animal-hospitals", (e) => {
-        // カーソル変更
         setOnCursor(true);
         setData(map, e);
       });
       map.on("mousemove", "animal-hospitals", (e) => {
-        // カーソル変更
         setOnCursor(true);
         setData(map, e);
       });
       map.on("mouseleave", "animal-hospitals", () => {
-        // カーソル変更
         setOnCursor(false);
-        // Set the hover param to `false`
+        // Set a hover param to `false`
         map.setFeatureState(
           {
             source: "animal-hospitals",
@@ -165,7 +163,6 @@ export default function Home() {
       ></div>
 
       <BtmSheet
-        // ボトムシートの参照
         ref={btmSheetRef}
         header={
           <div className="flex items-center justify-start">

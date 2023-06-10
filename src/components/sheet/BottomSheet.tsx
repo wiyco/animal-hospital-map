@@ -14,10 +14,9 @@ export interface ChildHandles {
 }
 
 const BtmSheetComponent: ForwardRefRenderFunction<ChildHandles, Props> = (props, ref) => {
-  // ボトムシートの参照
   const sheetRef = useRef<BottomSheetRef>(null);
 
-  // useImperativeHandleを使用することで、親コンポーネントから子コンポーネントのメソッドを呼び出せるようにする
+  // Allow to call below functions from parent
   useImperativeHandle(ref, () => ({
     fullOpen() {
       sheetRef.current?.snapTo(({ snapPoints }) => Math.max(...snapPoints));
@@ -30,16 +29,8 @@ const BtmSheetComponent: ForwardRefRenderFunction<ChildHandles, Props> = (props,
     <BottomSheet
       open
       ref={sheetRef}
-      // ボトムシートをドラッグしたとき変更できる高さの範囲
-      snapPoints={({ minHeight, headerHeight }) => [
-        // 最小の高さ
-        headerHeight,
-        // 最大の高さ
-        minHeight,
-      ]}
-      // オーバーレイを削除して後ろの要素をクリックできるようにする
+      snapPoints={({ minHeight, headerHeight }) => [headerHeight, minHeight]}
       blocking={false}
-      // ボトムシートのヘッダー部分
       header={props.header}
       skipInitialTransition
     >
