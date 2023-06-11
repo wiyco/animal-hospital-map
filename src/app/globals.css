@@ -2,26 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
-}
-
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 100%;
+
+  @apply min-h-screen bg-zinc-50;
+}
+
+/* The below class elements will add when mapboxgl called */
+.mapboxgl-control-container {
+  @apply absolute bottom-0 right-0;
+}
+
+.mapboxgl-control-container a {
+  @apply text-xs text-zinc-600 hover:text-zinc-800 hover:underline;
+}
+
+.mapboxgl-ctrl-attrib-inner {
+  background-color: rgb(255 255 255 / 60%);
+
+  @apply p-[1px] flex items-center justify-center space-x-2;
+}
+
+/* Override the bottom sheet styles */
+.react-modal-sheet-header {
+  height: 20px !important;
+}
+
+.react-modal-sheet-container {
+  @apply !max-w-3xl !right-0 !mx-auto;
+}
+
+.react-modal-sheet-drag-indicator {
+  width: 24px !important;
 }

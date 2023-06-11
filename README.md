@@ -1,5 +1,28 @@
 # Animal Hospital Map
 
+## VS Code Extentions
+
+- [TypeScript](https://marketplace.visualstudio.com/items?itemName=ms-vscode.vscode-typescript-next)
+- [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+- [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+- [Stylelint](https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint)
+- [Tailwind CSS](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
+- [PostCSS](https://marketplace.visualstudio.com/items?itemName=csstools.postcss)
+
+## Mapbox API Docs
+
+- [mapbox-gl](https://docs.mapbox.com/mapbox-gl-js/api/)
+
+## Environment variables
+
+You need to make a file in the route directory and add the below values.
+
+### `.env.local`
+
+```bash
+NEXT_PUBLIC_MAPBOX_TOKEN={YOUR_TOKEN}
+```
+
 ---
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
