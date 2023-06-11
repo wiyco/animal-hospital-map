@@ -2,8 +2,7 @@
 
 import mapboxgl from "mapbox-gl";
 import { useEffect, useRef, useState } from "react";
-
-import { BtmSheet, ChildHandles } from "@/components/sheet/BottomSheet";
+import Sheet, { SheetRef } from "react-modal-sheet";
 
 type hospitalParams = {
   name: string;
@@ -21,17 +20,20 @@ export default function Home() {
   // The target feature id
   let featureId = 0;
 
+  // Open status of bottom sheet
+  const [isOpen, setIsOpen] = useState(false);
   // Reference of bottom sheet
-  const btmSheetRef = useRef<ChildHandles>(null);
-
+  const sheetRef = useRef<SheetRef>();
+  // Snap func of bottom sheet
+  const snapTo = (i: number) => sheetRef.current?.snapTo(i);
   // Open bottom sheet
   const openSheet = () => {
-    btmSheetRef.current?.fullOpen();
+    setIsOpen(true);
+    snapTo(0);
   };
-
-  // Close bottom sheet
-  const closeSheet = () => {
-    btmSheetRef.current?.fullClose();
+  // Snap bottom sheet to header height
+  const snapSheet = () => {
+    snapTo(1);
   };
 
   // Set hospital params to bottom sheet
@@ -138,8 +140,8 @@ export default function Home() {
         const features = map.queryRenderedFeatures(e.point);
         const hasTarget = features.some((feature) => feature.source === "animal-hospitals");
         if (hasTarget) return;
-        // Close bottom sheet
-        closeSheet();
+        // Snap bottom sheet
+        snapSheet();
       });
       map.on("click", "animal-hospitals", (e) => {
         setOnCursor(true);
@@ -174,31 +176,41 @@ export default function Home() {
           onCursor ? "cursor-pointer" : "cursor-grab active:cursor-grabbing"
         }`}
       ></div>
-
-      <BtmSheet
-        ref={btmSheetRef}
-        header={
-          <div className="flex items-center justify-start">
-            <h1 className="text-xl">{params?.name}</h1>
-          </div>
-        }
-      >
-        <ul className="p-4 flex flex-col items-start justify-center space-y-2">
-          <li>{params?.address}</li>
-          <li>{params?.phone}</li>
-          <li>{params?.animal_type}</li>
-          <li>
-            <a
-              className="text-blue-600 hover:underline"
-              href={params?.hospital_url ?? ""}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {params?.hospital_url}
-            </a>
-          </li>
-        </ul>
-      </BtmSheet>
+      <div className="flex items-center justify-center">
+        <Sheet
+          ref={sheetRef}
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          snapPoints={[0.5, 65, 25]}
+          initialSnap={2}
+          springConfig={{ stiffness: 150, damping: 15, mass: 1 }}
+          detent="content-height"
+        >
+          <Sheet.Container>
+            <Sheet.Header />
+            <Sheet.Content>
+              <div className="px-4 flex flex-col items-start justify-center">
+                <h1 className="text-xl">{params?.name}</h1>
+                <ul className="py-4 flex flex-col items-start justify-center space-y-2">
+                  <li>{params?.address}</li>
+                  <li>{params?.phone}</li>
+                  <li>{params?.animal_type}</li>
+                  <li>
+                    <a
+                      className="text-blue-600 hover:underline"
+                      href={params?.hospital_url ?? ""}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {params?.hospital_url}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </Sheet.Content>
+          </Sheet.Container>
+        </Sheet>
+      </div>
     </main>
   );
 }

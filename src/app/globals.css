@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --rsbs-max-w: 48rem;
-}
-
 body {
   display: grid;
   grid-template-rows: auto 1fr auto;
@@ -27,4 +23,17 @@ body {
   background-color: rgb(255 255 255 / 60%);
 
   @apply p-[1px] flex items-center justify-center space-x-2;
+}
+
+/* Override the bottom sheet styles */
+.react-modal-sheet-header {
+  height: 20px !important;
+}
+
+.react-modal-sheet-container {
+  @apply !max-w-3xl !right-0 !mx-auto;
+}
+
+.react-modal-sheet-drag-indicator {
+  width: 24px !important;
 }
