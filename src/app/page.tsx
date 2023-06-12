@@ -1,5 +1,7 @@
 "use client";
 
+import "mapbox-gl/dist/mapbox-gl.css";
+
 import mapboxgl from "mapbox-gl";
 import { useEffect, useRef, useState } from "react";
 import Sheet, { SheetRef } from "react-modal-sheet";
@@ -136,6 +138,22 @@ export default function Home() {
         },
       });
 
+      // Add zoom and rotation controls
+      const nav = new mapboxgl.NavigationControl({
+        visualizePitch: true,
+      });
+      map.addControl(nav, "top-right");
+
+      // Add geo controls
+      const geo = new mapboxgl.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true,
+        },
+        trackUserLocation: true,
+        showUserHeading: true,
+      });
+      map.addControl(geo);
+
       map.on("click", (e) => {
         const features = map.queryRenderedFeatures(e.point);
         const hasTarget = features.some((feature) => feature.source === "animal-hospitals");
@@ -172,45 +190,41 @@ export default function Home() {
     <main className="relative">
       <div
         id="map"
-        className={`w-full h-full overflow-clip ${
-          onCursor ? "cursor-pointer" : "cursor-grab active:cursor-grabbing"
-        }`}
+        className={`${onCursor ? "cursor-pointer" : "cursor-grab active:cursor-grabbing"}`}
       ></div>
-      <div className="flex items-center justify-center">
-        <Sheet
-          ref={sheetRef}
-          isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
-          snapPoints={[0.5, 65, 25]}
-          initialSnap={2}
-          springConfig={{ stiffness: 200, damping: 20, mass: 0.5 }}
-          detent="content-height"
-        >
-          <Sheet.Container>
-            <Sheet.Header />
-            <Sheet.Content>
-              <div className="px-4 flex flex-col items-start justify-center">
-                <h1 className="text-xl">{params?.name}</h1>
-                <ul className="py-4 flex flex-col items-start justify-center space-y-2">
-                  <li>{params?.address}</li>
-                  <li>{params?.phone}</li>
-                  <li>{params?.animal_type}</li>
-                  <li>
-                    <a
-                      className="text-blue-600 hover:underline"
-                      href={params?.hospital_url ?? ""}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {params?.hospital_url}
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </Sheet.Content>
-          </Sheet.Container>
-        </Sheet>
-      </div>
+      <Sheet
+        ref={sheetRef}
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        snapPoints={[0.5, 65, 25]}
+        initialSnap={2}
+        springConfig={{ stiffness: 200, damping: 20, mass: 0.5 }}
+        detent="content-height"
+      >
+        <Sheet.Container>
+          <Sheet.Header />
+          <Sheet.Content>
+            <div className="px-4 flex flex-col items-start justify-center">
+              <h1 className="text-xl">{params?.name}</h1>
+              <ul className="py-4 flex flex-col items-start justify-center space-y-2">
+                <li>{params?.address}</li>
+                <li>{params?.phone}</li>
+                <li>{params?.animal_type}</li>
+                <li>
+                  <a
+                    className="text-blue-600 hover:underline"
+                    href={params?.hospital_url ?? ""}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {params?.hospital_url}
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </Sheet.Content>
+        </Sheet.Container>
+      </Sheet>
     </main>
   );
 }

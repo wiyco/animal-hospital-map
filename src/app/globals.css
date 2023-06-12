@@ -10,19 +10,14 @@ body {
   @apply min-h-screen bg-zinc-50;
 }
 
-/* The below class elements will add when mapboxgl called */
-.mapboxgl-control-container {
-  @apply absolute bottom-0 right-0;
+/* Mapbox canvas container */
+#map {
+  @apply w-full h-full overflow-clip;
 }
 
-.mapboxgl-control-container a {
-  @apply text-xs text-zinc-600 hover:text-zinc-800 hover:underline;
-}
-
-.mapboxgl-ctrl-attrib-inner {
-  background-color: rgb(255 255 255 / 60%);
-
-  @apply p-[1px] flex items-center justify-center space-x-2;
+/* The below class elements will add after mapboxgl called */
+.mapbox-improve-map {
+  @apply !hidden;
 }
 
 /* Override the bottom sheet styles */
