@@ -31,7 +31,7 @@ body {
 }
 
 .react-modal-sheet-container {
-  @apply !max-w-3xl !right-0 !mx-auto;
+  @apply !max-w-3xl !right-0 !mx-auto !transition-transform !duration-150 !ease-in-out;
 }
 
 .react-modal-sheet-drag-indicator {
