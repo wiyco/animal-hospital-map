@@ -237,7 +237,7 @@ export default function Home({ mapboxDirections }: any) {
 
 export async function getStaticProps() {
   const mapboxDirections = new MapboxDirections({
-    accessToken: mapboxgl.accessToken,
+    accessToken: process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "",
     unit: "metric",
     profile: "mapbox/driving",
   });
