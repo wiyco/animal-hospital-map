@@ -1,7 +1,9 @@
 "use client";
 
 import "mapbox-gl/dist/mapbox-gl.css";
+import "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css";
 
+import MapboxDirections from "@mapbox/mapbox-gl-directions";
 import mapboxgl from "mapbox-gl";
 import { useEffect, useRef, useState } from "react";
 import Sheet, { SheetRef } from "react-modal-sheet";
@@ -14,7 +16,7 @@ type hospitalParams = {
   hospital_url: string;
 };
 
-export default function Home() {
+export default function Home({ mapboxDirections }: any) {
   // State of hospital params
   const [params, setParams] = useState<hospitalParams>();
   // Is cursor on the layer that `animal-hospitals`
@@ -154,6 +156,10 @@ export default function Home() {
       });
       map.addControl(geo);
 
+      // Add directions
+      const dir = mapboxDirections;
+      map.addControl(dir);
+
       map.on("click", (e) => {
         const features = map.queryRenderedFeatures(e.point);
         const hasTarget = features.some((feature) => feature.source === "animal-hospitals");
@@ -227,4 +233,18 @@ export default function Home() {
       </Sheet>
     </main>
   );
+}
+
+export async function getStaticProps() {
+  const mapboxDirections = new MapboxDirections({
+    accessToken: mapboxgl.accessToken,
+    unit: "metric",
+    profile: "mapbox/driving",
+  });
+
+  return {
+    props: {
+      mapboxDirections: mapboxDirections,
+    },
+  };
 }
