@@ -1,7 +1,9 @@
 "use client";
 
 import "mapbox-gl/dist/mapbox-gl.css";
+import "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css";
 
+import MapboxDirections from "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions";
 import mapboxgl from "mapbox-gl";
 import { useEffect, useRef, useState } from "react";
 import Sheet, { SheetRef } from "react-modal-sheet";
@@ -97,6 +99,36 @@ export default function Home() {
       zoom: 14,
     });
 
+    // Add zoom and rotation controls
+    const nav = new mapboxgl.NavigationControl({
+      visualizePitch: true,
+    });
+    map.addControl(nav, "top-right");
+
+    // Add geo controls
+    const geo = new mapboxgl.GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true,
+      },
+      trackUserLocation: true,
+      showUserHeading: true,
+    });
+    map.addControl(geo, "top-right");
+    // Set user location to directions origin
+    geo.on("geolocate", (e) => {
+      /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
+      /* @ts-ignore */
+      dir.setOrigin([e?.coords.longitude, e?.coords.latitude]);
+    });
+
+    // Add directions
+    const dir = new MapboxDirections({
+      accessToken: process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "",
+      unit: "metric",
+      profile: "mapbox/walking",
+    });
+    map.addControl(dir, "top-left");
+
     // Ready Mapbox
     map.on("load", () => {
       map.addSource("animal-hospitals", {
@@ -138,21 +170,8 @@ export default function Home() {
         },
       });
 
-      // Add zoom and rotation controls
-      const nav = new mapboxgl.NavigationControl({
-        visualizePitch: true,
-      });
-      map.addControl(nav, "top-right");
-
-      // Add geo controls
-      const geo = new mapboxgl.GeolocateControl({
-        positionOptions: {
-          enableHighAccuracy: true,
-        },
-        trackUserLocation: true,
-        showUserHeading: true,
-      });
-      map.addControl(geo);
+      // Call geolocation
+      geo.trigger();
 
       map.on("click", (e) => {
         const features = map.queryRenderedFeatures(e.point);
