@@ -23,6 +23,24 @@ You need to make a file in the route directory and add the below values.
 NEXT_PUBLIC_MAPBOX_TOKEN={YOUR_TOKEN}
 ```
 
+## Mapbox Directions
+
+### npm package
+
+- [@mapbox/mapbox-gl-directions](https://www.npmjs.com/package/@mapbox/mapbox-gl-directions)
+- [xhr2](https://www.npmjs.com/package/xhr2)
+
+```
+npm i --legacy-peer-deps [package]
+```
+
+### Type declaration files
+
+`src/types`
+
+- `@mapbox/mapbox-gl-directions.d.ts`
+- `xhr2.d.ts`
+
 ---
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
