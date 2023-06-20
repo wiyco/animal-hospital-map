@@ -16,6 +16,10 @@ body {
 }
 
 /* The below class elements will add after mapboxgl called */
+.mapboxgl-ctrl-attrib-inner {
+  @apply !text-xs;
+}
+
 .mapbox-improve-map {
   @apply !hidden;
 }
