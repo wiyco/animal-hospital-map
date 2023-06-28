@@ -1,7 +1,7 @@
 import Menu from "@p/icons/menu.svg";
 
-export default function MenuButton() {
+export function MenuButton() {
   return (
-    <button><svg><Menu /></svg></button>
+    <button><Menu /></button>
   )
 }
