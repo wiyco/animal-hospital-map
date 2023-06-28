@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { MenuButton } from "@/components//buttons/MenuButton";
+
 export default function Header() {
   return (
     <header className="z-50 sticky top-0 p-4 w-full flex items-center justify-between shadow">
@@ -7,10 +9,7 @@ export default function Header() {
         <Link href={"."}>あにまっぷ</Link>
       </span>
       <nav>
-        <ul className="flex items-center space-x-3">
-          <li>A</li>
-          <li>B</li>
-        </ul>
+        <MenuButton />
       </nav>
     </header>
   );
