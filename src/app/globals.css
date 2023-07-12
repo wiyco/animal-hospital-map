@@ -7,21 +7,41 @@ body {
   grid-template-rows: auto 1fr auto;
   grid-template-columns: 100%;
 
-  @apply min-h-screen bg-zinc-50;
+  @apply min-h-screen;
+}
+
+header {
+  @apply relative;
 }
 
 /* Mapbox canvas container */
 #map {
-  @apply w-full h-full overflow-clip;
+  @apply w-full h-screen overflow-clip;
 }
 
 /* The below class elements will add after mapboxgl called */
+.mapboxgl-ctrl-top-right {
+  @apply !mt-16;
+}
+
 .mapboxgl-ctrl-attrib-inner {
   @apply !text-xs;
 }
 
 .mapbox-improve-map {
   @apply !hidden;
+}
+
+.directions-control {
+  @apply !mt-16;
+}
+
+.mapbox-directions-component-keyline {
+  @apply !hidden;
+}
+
+.mapbox-form-label {
+  background-color: white !important;
 }
 
 /* Override the bottom sheet styles */
