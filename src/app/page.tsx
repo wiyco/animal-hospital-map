@@ -72,7 +72,6 @@ export default function Home() {
     const props = feature.properties;
     /**
      * @todo mapbox要相談
-     * @param {props.name}
      * csv(utf-8, comma)をTilesへアップロードすると、
      * 先頭のcolumn-headerに謎のUnicode文字が追加される。(u{feff})
      * おそらくutf-8のbomに関連するバグだと思われる。
@@ -125,7 +124,7 @@ export default function Home() {
     const dir = new MapboxDirections({
       accessToken: process.env.NEXT_PUBLIC_MAPBOX_TOKEN ?? "",
       unit: "metric",
-      profile: "mapbox/walking",
+      profile: "mapbox/driving",
     });
     map.addControl(dir, "top-left");
 
@@ -155,7 +154,7 @@ export default function Home() {
         type: "symbol",
         layout: {
           /**
-           * @todo @param {props.name}
+           * @todo
            */
           "text-field": ["get", "\u{feff}name"],
           "text-font": ["Open Sans Regular"],
@@ -206,7 +205,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="relative">
+    <main>
       <div
         id="map"
         className={`${onCursor ? "cursor-pointer" : "cursor-grab active:cursor-grabbing"}`}
