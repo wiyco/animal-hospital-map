@@ -11,6 +11,10 @@ body {
 }
 
 header {
+  @apply z-50 fixed top-0 w-full;
+}
+
+main {
   @apply relative;
 }
 
@@ -32,12 +36,20 @@ header {
   @apply !hidden;
 }
 
-.directions-control {
+.mapboxgl-ctrl-directions {
   @apply !mt-16;
 }
 
-.mapbox-directions-component-keyline {
+.mapbox-directions-component-keyline:not(.mapbox-directions-profile) {
   @apply !hidden;
+}
+
+.mapbox-directions-instructions {
+  @apply !overflow-auto !overflow-y-scroll;
+}
+
+.mapbox-directions-instructions-wrapper {
+  @apply !max-h-[5.5rem] md:!max-h-[30dvh];
 }
 
 .mapbox-form-label {
