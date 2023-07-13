@@ -217,7 +217,6 @@ export default function Home() {
         onClose={() => setIsOpen(false)}
         snapPoints={[0.5, 65, 25]}
         initialSnap={2}
-        springConfig={{ stiffness: 200, damping: 20, mass: 0.5 }}
         detent="content-height"
       >
         <Sheet.Container>
